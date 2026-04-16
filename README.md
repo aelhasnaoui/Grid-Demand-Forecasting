@@ -1,4 +1,4 @@
-# Atalaia Grid Demand Forecasting Framework
+# Grid Demand Forecasting Framework
 
 This framework provides a robust solution for predicting grid demand with a specific focus on spinning reserve management.
 
