@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "grid-demand-forecasting"
+version = "0.1.0"
+description = "Grid Demand Forecasting Framework focusing on Spinning Reserves"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "torch>=2.0.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "scikit-learn>=1.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
