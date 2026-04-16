@@ -7,16 +7,15 @@ from torch.utils.data import DataLoader, Dataset
 
 class GridDataset(Dataset):
     """
-    Handles real-world PJM data. 
     Implements a rolling window for 24h, 48h, and 72h horizons.
     """
     def __init__(self, csv_path: str, history_size: int = 168, horizons: list = [24, 48, 72]):
-        # Load real data (e.g., PJM_Load_hourly.csv)
+        # Load data
         self.df = pd.read_csv(csv_path, index_col=0, parse_dates=True)
         self.data = self.df.values
         self.history_size = history_size
         self.horizons = horizons
-        self.scaler = RobustScaler() # Better for outliers in grid data
+        self.scaler = RobustScaler() 
         self.scaled_data = self.scaler.fit_transform(self.data)
 
     def __len__(self):
@@ -54,11 +53,9 @@ class ResidualGridNet(nn.Module):
     """
     def __init__(self, input_dim: int, hidden_dim: int = 128):
         super().__init__()
-        # Captures temporal dependencies in both directions
         self.lstm = nn.LSTM(input_dim, hidden_dim, batch_first=True, bidirectional=True, dropout=0.2)
         self.attention = GridAttention(hidden_dim)
         
-        # Multi-task heads for different horizons
         self.h24 = nn.Linear(hidden_dim * 2, input_dim)
         self.h48 = nn.Linear(hidden_dim * 2, input_dim)
         self.h72 = nn.Linear(hidden_dim * 2, input_dim)
@@ -85,7 +82,6 @@ def train_step(model, batch, optimizer, criterion):
     preds = model(x)
     
     # Dynamic weighting: prioritize 24h accuracy for spinning reserves
-    # but don't let 72h error explode.
     loss_24 = criterion(preds["24h"], targets["24h"])
     loss_48 = criterion(preds["48h"], targets["48h"])
     loss_72 = criterion(preds["72h"], targets["72h"])
