@@ -1,6 +1,6 @@
 # Grid Demand Forecasting
 
-This framework provides a robust solution for predicting grid demand with a specific focus on spinning reserve management.
+We are trying to predict grid demand with a specific focus on spinning reserve management.
 
 ## Key Features Demonstrated
 
