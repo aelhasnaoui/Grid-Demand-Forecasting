@@ -5,9 +5,9 @@ install:
 
 train:
 	@echo "Starting training process..."
-	@echo "Please ensure you have the dataset (e.g., PJM_Load_hourly.csv) ready."
-	@echo "Running TFT.py..."
-	python TFT.py
+	@echo "Live data will be fetched using 'gridstatus' within the Jupyter Notebook."
+	@echo "Please open and run 'GridForecast.ipynb'."
+
 
 clean:
 	rm -rf __pycache__

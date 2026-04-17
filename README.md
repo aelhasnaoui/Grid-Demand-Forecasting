@@ -1,35 +1,33 @@
-# Grid Demand Forecasting
+# Atalaia Grid Demand Forecasting Framework (Live Edition)
 
-We are trying to predict grid demand with a specific focus on spinning reserve management.
+This framework provides a sophisticated solution for predicting grid demand using **real-time data**, specifically optimized for manage spinning reserves.
 
 ## Key Features Demonstrated
 
-- **Scale**: Handles high-dimensionality data using vectorized tensor operations.
-- **Modularity**: Clean separation of concerns between data loading (`GridDataset`), architecture (`ResidualGridNet`), and multi-task loss calculation.
-- **Domain Specificity**: Tailored for spinning reserves with a Multi-Horizon output head covering 24h, 48h, and 72h prediction windows.
-- **Robustness**: Utilizes `RobustScaler` and residual connections to ensure stable model training and prevent divergence during sensor noise or anomalies.
+- **Real-Time Integration**: Leverages `gridstatus` to fetch live electricity load data directly from major ISOs (CAISO, PJM, ERCOT), eliminating the need for static historical CSVs.
+- **Bi-Directional Attention Architecture**: Implements a `ResidualGridNet` (Bi-LSTM with Attention mechanism) that captures complex temporal dependencies in both forward and backward directions.
+- **Multi-Horizon Forecasting**: Includes dedicated output heads for multiple forecasting horizons (24h, 48h, and 72h), essential for grid stability mapping.
+- **Robust Training Pipeline**: Uses `RobustScaler` and residual learning to ensure model convergence and resilience against live sensor noise.
 
 ## Setup & Installation
 
-The project uses a standard `pyproject.toml` for dependency management.
+The project uses `pyproject.toml` for modern dependency management.
 
 ```bash
 # Install the required dependencies
 make install
 ```
 
-## Running the Model
+## Running the Forecast
 
-Trigger the training process with a single command:
+The core logic is now encapsulated in a high-interactivity Jupyter Notebook:
 
-```bash
-make train
-```
-
-*(Note: Ensure your grid data CSV is located in the appropriate path as required by `TFT.py`.)*
+1. Open **`GridForecast.ipynb`**.
+2. Run the cells to fetch the latest 60 days of live grid data.
+3. The model will automatically initialize and train on the current grid conditions.
 
 ## Architecture details
 
-- **GridDataset**: Handles sequence creation and dynamic scaling via `RobustScaler`.
-- **ResidualGridNet**: A Bi-LSTM network with Cross-Attention and residual connections modeling temporal dependencies in both directions.
-- **Dynamic Loss Weighting**: The `train_step` applies domain-specific importance weighting for each prediction horizon (prioritizing the 24h horizon for immediate spinning reserves).
+- **RealTimeGridDataset**: Dynamically connects to ISO APIs, handles hourly resampling, and performs robust scaling on live streams.
+- **ResidualGridNet**: A deep learning architecture combining Bi-LSTM layers with Cross-Attention to focalize on critical historical load peaks.
+- **Domain-Specific Loss**: Applies a weighted MSE loss that prioritizes 24h accuracy (critical for Spinning Reserves) while maintaining long-range stability for 72h projections.
